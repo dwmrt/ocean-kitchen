@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KatalogController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog');
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog');
