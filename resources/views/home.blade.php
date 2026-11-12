@@ -3,23 +3,12 @@
 
 @section('content')
     {{-- Banner PO --}}
-    <div class="bg-[#efdbce] border border-brand px-6 py-5">
-        <b class="bg-white text-brand px-2 py-1 mr-3">■ PO DIBUKA</b>
-        Periode Pre-Order: <b>{{ $po['buka'] }} - {{ $po['tutup'] }}</b>
-        · Pesanan diterima {{ $po['diterima'] }}
-    </div>
+    <x-po-banner :po="$po" />
 
     {{-- Katalog --}}
     <h2 id="katalog" class="text-[26px] font-bold mt-[30px] mb-3.5">Katalog Menu</h2>
 
-    <div class="flex overflow-x-auto border-y border-ink">
-        @foreach ($kategoriList as $k)
-            <a href="{{ route('home', ['kategori' => $k]) }}#katalog"
-               class="flex-1 text-center py-3 whitespace-nowrap {{ $kategori === $k ? 'text-brand font-semibold border-b-2 border-brand' : 'text-muted' }}">
-                {{ $k }}
-            </a>
-        @endforeach
-    </div>
+    <x-category-tabs :list="$kategoriList" :aktif="$kategori" route="home" />
 
     <div class="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-6 mt-6">
         @forelse ($produk as $p)

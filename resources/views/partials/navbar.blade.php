@@ -5,7 +5,7 @@
     </a>
     <nav class="flex flex-wrap gap-7">
         <a href="/" class="py-1 opacity-80 hover:opacity-100 {{ request()->is('/') ? '!opacity-100 border-b-2 border-white' : '' }}">Beranda</a>
-        <a href="/#katalog" class="py-1 opacity-80 hover:opacity-100">Katalog</a>
+        <a href="{{ route('katalog') }}" class="py-1 opacity-80 hover:opacity-100 {{ request()->routeIs('katalog') ? '!opacity-100 border-b-2 border-white' : '' }}">Katalog</a>
         <a href="/#cara-pesan" class="py-1 opacity-80 hover:opacity-100">Cara Pesan</a>
         <a href="#ongkir" class="py-1 opacity-80 hover:opacity-100">Info Ongkir</a>
         <a href="#" class="py-1 opacity-80 hover:opacity-100">Cek Pesanan</a>
