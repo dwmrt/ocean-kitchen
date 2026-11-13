@@ -16,7 +16,7 @@
 
     <form method="POST" action="{{ route('admin.logout') }}">
         @csrf
-        <button type="submit">Keluar</button>
+        <button type="submit" class="btn btn-outline">Keluar</button>
     </form>
 </body>
 </html>

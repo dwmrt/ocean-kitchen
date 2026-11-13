@@ -4,38 +4,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Admin | {{ config('app.name') }}</title>
-    {{-- Tampilan sementara dari Backend. Frontend (Elda) boleh mengganti seluruh tampilan,
-         asalkan nama field (username, password), @csrf, dan route('admin.login.submit') dipertahankan. --}}
-    <style>
-        body { font-family: system-ui, sans-serif; background: #f5f5f4; margin: 0; display: grid; place-items: center; min-height: 100vh; }
-        main { background: #fff; padding: 2rem; border-radius: 12px; width: min(360px, 90vw); box-shadow: 0 2px 12px rgba(0,0,0,.08); }
-        h1 { font-size: 1.25rem; margin: 0 0 1rem; }
-        label { display: block; font-size: .875rem; margin: .75rem 0 .25rem; }
-        input { width: 100%; box-sizing: border-box; padding: .6rem; border: 1px solid #ccc; border-radius: 8px; }
-        button { margin-top: 1.25rem; width: 100%; padding: .7rem; border: 0; border-radius: 8px; background: #1c1917; color: #fff; cursor: pointer; }
-        .error { background: #fee2e2; color: #991b1b; padding: .6rem; border-radius: 8px; font-size: .875rem; }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-<main>
-    <h1>Login Admin</h1>
+<body class="min-h-screen grid place-items-center px-5">
+    <main class="w-full max-w-sm bg-card border border-brand p-8">
+        <img src="{{ asset('images/logo.png') }}" alt="" class="w-16 h-16 rounded-full mx-auto">
+        <h1 class="font-display font-bold text-2xl text-center uppercase mt-3 mb-6">Login Admin</h1>
 
-    @if ($errors->any())
-        <p class="error">{{ $errors->first() }}</p>
-    @endif
+        @if ($errors->any())
+            <p class="bg-[#fde8e8] border border-red-400 text-red-700 px-3 py-2 mb-4 text-sm">
+                {{ $errors->first() }}
+            </p>
+        @endif
 
-    <form method="POST" action="{{ route('admin.login.submit') }}">
-        @csrf
-        <label for="username">Username</label>
-        <input id="username" name="username" type="text" value="{{ old('username') }}"
-               required autofocus autocomplete="username">
+        <form method="POST" action="{{ route('admin.login.submit') }}">
+            @csrf
+            <label for="username" class="block text-sm font-semibold mb-1">Username</label>
+            <input id="username" name="username" type="text" value="{{ old('username') }}"
+                   required autofocus autocomplete="username"
+                   class="w-full border border-sand bg-white px-3 py-2.5 mb-4">
 
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password"
-               required autocomplete="current-password">
+            <label for="password" class="block text-sm font-semibold mb-1">Password</label>
+            <input id="password" name="password" type="password"
+                   required autocomplete="current-password"
+                   class="w-full border border-sand bg-white px-3 py-2.5 mb-6">
 
-        <button type="submit">Masuk</button>
-    </form>
-</main>
+            <button type="submit" class="btn w-full py-3">Masuk</button>
+        </form>
+    </main>
 </body>
 </html>
