@@ -13,7 +13,6 @@ class AdminSeeder extends Seeder
         $password = env('SEED_ADMIN_PASSWORD');
 
         if ($password === null) {
-            // Password bawaan hanya boleh dipakai di lokal.
             if (! app()->environment('local')) {
                 throw new \RuntimeException(
                     'Isi SEED_ADMIN_PASSWORD di .env sebelum menjalankan seeder di luar lingkungan lokal.'
@@ -22,7 +21,6 @@ class AdminSeeder extends Seeder
             $password = 'admin12345';
         }
 
-        // Password di-hash otomatis oleh cast "hashed" di model Admin.
         Admin::updateOrCreate(
             ['username' => $username],
             ['nama' => 'Admin Ocean Kitchen', 'password' => $password]
