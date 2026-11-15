@@ -9,19 +9,20 @@ class BahanBaku extends Model
     protected $table = 'bahan_baku';
     protected $primaryKey = 'id_bahan';
 
-    protected $fillable = ['nama_bahan', 'satuan', 'jumlah', 'harga_bahan'];
+    protected $fillable = ['nama_bahan', 'satuan', 'jumlah', 'harga_bahan', 'harga_estimasi'];
 
     protected function casts(): array
     {
         return [
             'jumlah' => 'decimal:3',
             'harga_bahan' => 'decimal:2',
+            'harga_estimasi' => 'boolean',
         ];
     }
 
     /**
      * Harga per 1 satuan = harga_bahan / jumlah.
-     * Contoh: 14000 / 1000 gram = Rp 14 per gram.
+     * Contoh: 13000 / 1000 gram = Rp 13 per gram.
      */
     public function getHargaPerSatuanAttribute(): float
     {
