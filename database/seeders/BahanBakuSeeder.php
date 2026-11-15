@@ -7,23 +7,23 @@ use Illuminate\Database\Seeder;
 
 class BahanBakuSeeder extends Seeder
 {
-    // DATA CONTOH. harga_bahan = harga untuk sejumlah "jumlah" satuan.
-    // Contoh: tepung 1000 gram seharga 14000 => Rp 14 per gram.
+    /**
+     * Data asli dari database/seeders/data/bahan_baku.php.
+     * Memakai firstOrCreate: data yang sudah ada TIDAK ditimpa, jadi perubahan
+     * harga yang dilakukan admin lewat aplikasi tidak hilang kalau seeder diulang.
+     * Untuk memuat ulang data dari awal di lokal: php artisan migrate:fresh --seed
+     */
     public function run(): void
     {
-        $bahan = [
-            ['Tepung terigu', 'gram', 1000, 14000],
-            ['Gula pasir', 'gram', 1000, 17000],
-            ['Mentega', 'gram', 200, 18000],
-            ['Telur', 'butir', 10, 28000],
-            ['Cokelat batang', 'gram', 500, 45000],
-            ['Susu cair', 'ml', 1000, 18000],
-        ];
-
-        foreach ($bahan as [$nama, $satuan, $jumlah, $harga]) {
-            BahanBaku::updateOrCreate(
+        foreach (require __DIR__.'/data/bahan_baku.php' as $nama => [$satuan, $jumlah, $harga, $estimasi]) {
+            BahanBaku::firstOrCreate(
                 ['nama_bahan' => $nama],
-                ['satuan' => $satuan, 'jumlah' => $jumlah, 'harga_bahan' => $harga]
+                [
+                    'satuan' => $satuan,
+                    'jumlah' => $jumlah,
+                    'harga_bahan' => $harga,
+                    'harga_estimasi' => $estimasi,
+                ]
             );
         }
     }

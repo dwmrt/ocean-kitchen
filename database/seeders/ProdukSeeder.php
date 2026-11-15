@@ -2,70 +2,46 @@
 
 namespace Database\Seeders;
 
-use App\Models\BahanBaku;
-use App\Models\KomposisiProduk;
 use App\Models\Produk;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukSeeder extends Seeder
 {
-    // DATA CONTOH. Ganti dengan produk, harga, dan resep asli Ocean Kitchen.
+    /**
+     * Data asli dari database/seeders/data/produk.php (16 produk Ocean Kitchen).
+     *
+     * - firstOrCreate: produk yang sudah ada (misalnya sudah diubah admin) TIDAK ditimpa.
+     * - Foto disalin dari database/seeders/foto ke storage/app/public/produk
+     *   (hanya kalau belum ada di sana). Tampilkan dengan: asset('storage/'.$produk->foto)
+     *   setelah menjalankan: php artisan storage:link
+     * - hpp sengaja kosong: diisi oleh HitungHPP() nanti.
+     * - berat_gram: estimasi HANYA di lokal. Di server dibiarkan kosong sampai
+     *   pemilik toko memberi berat asli.
+     */
     public function run(): void
     {
-        $produk = [
-            ['Brownies Cokelat', 'Brownies', 45000, 'aktif'],
-            ['Brownies Keju', 'Brownies', 48000, 'aktif'],
-            ['Choco Chip Cookies', 'Cookies', 35000, 'aktif'],
-            ['Donat Gula Halus', 'Donuts', 30000, 'aktif'],
-            ['Pie Susu', 'Pie', 25000, 'aktif'],
-            ['Bolu Pandan', 'Cakes', 55000, 'aktif'],
-            // Untuk menguji bahwa produk nonaktif tidak tampil di katalog.
-            ['Menu Lama (nonaktif)', 'Cakes', 40000, 'nonaktif'],
-        ];
+        $estimasiBerat = require __DIR__.'/data/berat_estimasi.php';
 
-        foreach ($produk as [$nama, $kategori, $harga, $status]) {
-            Produk::updateOrCreate(
-                ['nama_produk' => $nama],
-                [
-                    'kategori' => $kategori,
-                    'deskripsi' => '[CONTOH] Data contoh untuk pengembangan.',
-                    'harga_jual' => $harga,
-                    'status' => $status,
-                    // hpp sengaja kosong: diisi oleh HitungHPP() nanti.
-                ]
-            );
+        foreach (require __DIR__.'/data/produk.php' as $data) {
+            $data['berat_gram'] = $estimasiBerat[$data['nama_produk']] ?? null;
+
+            Produk::firstOrCreate(['nama_produk' => $data['nama_produk']], $data);
+
+            $this->salinFoto($data['foto']);
         }
-
-        // Komposisi hanya untuk 2 produk. Produk lain sengaja tanpa komposisi
-        // supaya kasus "HPP belum bisa dihitung" bisa diuji.
-        $this->komposisi('Brownies Cokelat', [
-            ['Tepung terigu', 100],
-            ['Gula pasir', 120],
-            ['Mentega', 100],
-            ['Telur', 2],
-            ['Cokelat batang', 150],
-        ]);
-
-        $this->komposisi('Choco Chip Cookies', [
-            ['Tepung terigu', 150],
-            ['Gula pasir', 100],
-            ['Mentega', 100],
-            ['Telur', 1],
-            ['Cokelat batang', 100],
-        ]);
     }
 
-    private function komposisi(string $namaProduk, array $daftar): void
+    private function salinFoto(?string $foto): void
     {
-        $idProduk = Produk::where('nama_produk', $namaProduk)->value('id_produk');
+        if (! $foto) {
+            return;
+        }
 
-        foreach ($daftar as [$namaBahan, $jumlahPakai]) {
-            $idBahan = BahanBaku::where('nama_bahan', $namaBahan)->value('id_bahan');
+        $sumber = __DIR__.'/foto/'.basename($foto);
 
-            KomposisiProduk::updateOrCreate(
-                ['id_produk' => $idProduk, 'id_bahan' => $idBahan],
-                ['jumlah_pakai' => $jumlahPakai]
-            );
+        if (is_file($sumber) && ! Storage::disk('public')->exists($foto)) {
+            Storage::disk('public')->put($foto, file_get_contents($sumber));
         }
     }
 }

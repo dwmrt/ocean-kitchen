@@ -8,18 +8,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin selalu dibuat (idempotent: aman dijalankan berulang).
-        $this->call(AdminSeeder::class);
+        // Data asli Ocean Kitchen + admin (aman dijalankan berulang: tidak menimpa).
+        $this->call([
+            AdminSeeder::class,
+            BahanBakuSeeder::class,
+            ProdukSeeder::class,
+            KomposisiSeeder::class,
+            TarifOngkirSeeder::class,
+        ]);
 
-        // Data contoh HANYA untuk lingkungan lokal.
-        // Jangan sampai data contoh ikut masuk ke server milik UMKM.
+        // Data contoh HANYA untuk lingkungan lokal (periode PO contoh yang sedang dibuka).
         if (app()->environment('local')) {
-            $this->call([
-                TarifOngkirSeeder::class,
-                BahanBakuSeeder::class,
-                ProdukSeeder::class,
-                PeriodePoSeeder::class,
-            ]);
+            $this->call(PeriodePoSeeder::class);
         }
     }
 }

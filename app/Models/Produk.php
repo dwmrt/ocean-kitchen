@@ -14,7 +14,9 @@ class Produk extends Model
 
     protected $fillable = [
         'nama_produk', 'kategori', 'deskripsi', 'foto',
-        'harga_jual', 'hpp', 'status',
+        'harga_jual', 'satuan', 'ukuran', 'min_order', 'berat_gram',
+        'lama_pengerjaan', 'daya_tahan',
+        'hpp', 'status',
     ];
 
     protected function casts(): array
@@ -22,7 +24,18 @@ class Produk extends Model
         return [
             'harga_jual' => 'decimal:2',
             'hpp' => 'decimal:2',
+            'min_order' => 'integer',
+            'berat_gram' => 'integer',
         ];
+    }
+
+    /**
+     * URL foto untuk ditampilkan di halaman (null kalau belum ada foto).
+     * Butuh: php artisan storage:link
+     */
+    public function getFotoUrlAttribute(): ?string
+    {
+        return $this->foto ? asset('storage/'.$this->foto) : null;
     }
 
     public function scopeAktif($query)
