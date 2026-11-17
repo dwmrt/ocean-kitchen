@@ -14,8 +14,13 @@
                 :nama="$p['nama']"
                 :deskripsi="$p['deskripsi']"
                 :harga="$p['harga']"
-                :gambar="$p['gambar']"
-                :kategori="$p['kategori']" />
+                :gambar="$p['gambar'] ?? null"
+                :kategori="$p['kategori']"
+                :satuan="$p['satuan'] ?? null"
+                :ukuran="$p['ukuran'] ?? null"
+                :min-order="$p['min_order'] ?? null"
+                :url="$p['url_detail'] ?? null"
+                :po-dibuka="$po['dibuka'] ?? true" />
         @empty
             <p class="col-span-full text-center text-muted py-10">Belum ada produk di kategori ini.</p>
         @endforelse
@@ -27,7 +32,7 @@
         <table class="w-full border border-brand bg-card text-left">
             <thead class="bg-brand text-white">
                 <tr>
-                    <th class="px-4 py-3">Wilayah</th>
+                    <th class="px-4 py-3">Jarak Pengiriman</th>
                     <th class="px-4 py-3">Biaya</th>
                 </tr>
             </thead>
@@ -35,7 +40,12 @@
                 @foreach ($ongkir as $o)
                     <tr class="border-t border-sand">
                         <td class="px-4 py-3">{{ $o['wilayah'] }}</td>
-                        <td class="px-4 py-3 font-semibold">Rp {{ number_format($o['biaya'], 0, ',', '.') }}</td>
+                        <td class="px-4 py-3 font-semibold">
+                            Rp {{ number_format($o['biaya'], 0, ',', '.') }}
+                            @if (!empty($o['satuan']))
+                                <span class="text-muted font-normal">{{ $o['satuan'] }}</span>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
                 <tr class="border-t border-sand">
