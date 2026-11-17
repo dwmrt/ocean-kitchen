@@ -124,11 +124,13 @@ class KatalogTest extends TestCase
             ->assertViewHas('po', fn ($po) => $po['dibuka'] === false);
     }
 
-    public function test_ongkir_dikirim_per_kg(): void
+    public function test_ongkir_per_tingkat_jarak(): void
     {
         $this->get('/katalog')
-            ->assertViewHas('ongkir', fn ($o) => count($o) === 1
+            ->assertViewHas('ongkir', fn ($o) => count($o) === 3
+                && $o[0]['wilayah'] === 'Jarak 0-14 km'
                 && $o[0]['biaya'] === 10000
-                && $o[0]['satuan'] === 'per kg');
+                && $o[1]['biaya'] === 20000
+                && $o[2]['biaya'] === 30000);
     }
 }

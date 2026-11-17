@@ -110,14 +110,18 @@ class ProdukController extends Controller
         ];
     }
 
-    /** Tarif ongkir. "biaya" = biaya per kg (lihat "satuan"). */
+    /**
+     * Tarif ongkir antar: Rp 10.000 per 10 km (dibulatkan ke blok terdekat),
+     * ditampilkan per tingkat jarak. "wilayah" berisi nama tingkat (contoh: "Jarak 0-14 km"),
+     * "biaya" ongkir tingkat itu. Rumusnya ada di App\Services\OngkirService.
+     * Ambil di rumah gratis.
+     */
     private function dataOngkir(): array
     {
-        return TarifOngkir::orderBy('id_tarif')->get()
+        return TarifOngkir::orderBy('biaya')->get()
             ->map(fn (TarifOngkir $t) => [
                 'wilayah' => $t->wilayah,
                 'biaya' => (int) $t->biaya,
-                'satuan' => 'per kg',
             ])
             ->all();
     }

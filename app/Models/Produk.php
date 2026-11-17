@@ -14,7 +14,7 @@ class Produk extends Model
 
     protected $fillable = [
         'nama_produk', 'kategori', 'deskripsi', 'foto',
-        'harga_jual', 'satuan', 'ukuran', 'min_order', 'berat_gram',
+        'harga_jual', 'satuan', 'ukuran', 'min_order',
         'lama_pengerjaan', 'daya_tahan',
         'hpp', 'status',
     ];
@@ -25,7 +25,6 @@ class Produk extends Model
             'harga_jual' => 'decimal:2',
             'hpp' => 'decimal:2',
             'min_order' => 'integer',
-            'berat_gram' => 'integer',
         ];
     }
 
