@@ -16,16 +16,10 @@ class ProdukSeeder extends Seeder
      *   (hanya kalau belum ada di sana). Tampilkan dengan: asset('storage/'.$produk->foto)
      *   setelah menjalankan: php artisan storage:link
      * - hpp sengaja kosong: diisi oleh HitungHPP() nanti.
-     * - berat_gram: estimasi HANYA di lokal. Di server dibiarkan kosong sampai
-     *   pemilik toko memberi berat asli.
      */
     public function run(): void
     {
-        $estimasiBerat = require __DIR__.'/data/berat_estimasi.php';
-
         foreach (require __DIR__.'/data/produk.php' as $data) {
-            $data['berat_gram'] = $estimasiBerat[$data['nama_produk']] ?? null;
-
             Produk::firstOrCreate(['nama_produk' => $data['nama_produk']], $data);
 
             $this->salinFoto($data['foto']);
