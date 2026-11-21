@@ -65,11 +65,11 @@ class DataAsliSeederTest extends TestCase
         $this->assertEquals(4000, (float) $bomboloni->harga_jual);
     }
 
-    public function test_tarif_ongkir_10_ribu_per_10_km(): void
+    public function test_tarif_ongkir_antar_maksimal_10_km(): void
     {
-        $biaya = TarifOngkir::orderBy('biaya')->pluck('biaya')->map(fn ($b) => (int) $b)->all();
-
-        $this->assertSame([10000, 20000, 30000], $biaya);
+        $this->assertSame(1, TarifOngkir::count());
+        $this->assertSame('Antar maks. 10 km', TarifOngkir::firstOrFail()->wilayah);
+        $this->assertEquals(10000, TarifOngkir::firstOrFail()->biaya);
     }
 
     public function test_seeder_aman_dijalankan_berulang(): void
@@ -79,6 +79,6 @@ class DataAsliSeederTest extends TestCase
         $this->assertSame(16, Produk::count());
         $this->assertSame(41, BahanBaku::count());
         $this->assertSame(140, KomposisiProduk::count());
-        $this->assertSame(3, TarifOngkir::count());
+        $this->assertSame(1, TarifOngkir::count());
     }
 }
