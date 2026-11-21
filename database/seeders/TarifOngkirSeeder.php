@@ -9,23 +9,19 @@ use Illuminate\Database\Seeder;
 class TarifOngkirSeeder extends Seeder
 {
     /**
-     * Tingkat jarak untuk pilihan manual pelanggan. Biaya dihitung dari aturan
-     * penjual di OngkirService (satu-satunya sumber rumus):
-     *   Rp 10.000 per 10 km, dibulatkan ke blok terdekat.
-     *   0-14 km = 10.000 | 15-24 km = 20.000 | 25-34 km = 30.000
-     * Ambil di rumah tidak dikenai ongkir (id_tarif kosong di pesanan).
-     * Batas jangkauan antar bisa ditambah atau dikurangi admin.
+     * Aturan dari pemilik toko: pengantaran (ojol atau diantar pemilik) MAKSIMAL 10 km.
+     * Di dalam jarak itu ongkir Rp 10.000 (satu blok 10 km, lihat OngkirService).
+     * Di luar 10 km tidak diantar lewat sistem ini (dikirim lewat ekspedisi, diurus
+     * pemilik secara manual). Ambil di rumah gratis (id_tarif kosong di pesanan).
+     *
+     * Kalau batas jangkauan nanti dinaikkan, tambahkan tingkat baru di sini atau lewat admin;
+     * rumus untuk jarak lebih jauh sudah ada di OngkirService.
      */
     public function run(): void
     {
-        $ongkir = new OngkirService();
-
-        // [label, contoh jarak di dalam tingkat itu]
-        foreach ([['0-14', 10], ['15-24', 20], ['25-34', 30]] as [$label, $contohKm]) {
-            TarifOngkir::firstOrCreate(
-                ['wilayah' => "Jarak {$label} km"],
-                ['biaya' => $ongkir->hitung($contohKm)]
-            );
-        }
+        TarifOngkir::firstOrCreate(
+            ['wilayah' => 'Antar maks. 10 km'],
+            ['biaya' => (new OngkirService())->hitung(10)]
+        );
     }
 }
