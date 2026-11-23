@@ -23,13 +23,18 @@ class Pesanan extends Model
     public const METODE_AMBIL = 'ambil';
     public const METODE_ANTAR = 'antar';
 
+    // metode_bayar
+    public const METODE_BAYAR_NON_TUNAI = 'non_tunai';   // QRIS atau transfer bank
+    public const METODE_BAYAR_COD = 'cod';               // bayar di tempat
+
     protected $table = 'pesanan';
     protected $primaryKey = 'id_pesanan';
 
     protected $fillable = [
         'kode_pesanan', 'id_po', 'id_tarif', 'id_admin',
         'nama_pelanggan', 'no_hp', 'alamat', 'metode_terima', 'jadwal_terima',
-        'ongkir', 'total_bayar',
+        'ongkir', 'total_bayar', 'metode_bayar', 'batas_bayar',
+        'jarak_km', 'latitude', 'longitude',
         'status_bayar', 'bukti_bayar', 'alasan_tolak',
         'status_pesanan', 'alasan_batal',
     ];
@@ -38,8 +43,12 @@ class Pesanan extends Model
     {
         return [
             'jadwal_terima' => 'datetime',
+            'batas_bayar' => 'datetime',
             'ongkir' => 'decimal:2',
             'total_bayar' => 'decimal:2',
+            'jarak_km' => 'decimal:2',
+            'latitude' => 'decimal:7',
+            'longitude' => 'decimal:7',
         ];
     }
 
