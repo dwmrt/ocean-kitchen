@@ -231,7 +231,7 @@ class CreateOrderTest extends TestCase
             ->assertOk()
             ->assertSee($kode)
             ->assertSee('130.000')
-            ->assertSee('Bayar sekarang')
+            ->assertSee('Unggah bukti')
             ->assertDontSee('081234567890');   // nomor HP tidak ditampilkan
     }
 
