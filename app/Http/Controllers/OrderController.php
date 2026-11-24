@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Requests\HitungTotalRequest;
+use App\Http\Requests\UploadBuktiRequest;
+use App\Models\Pesanan;
 use App\Services\CreateOrderService;
 use App\Services\HitungTotalService;
+use App\Services\UploadBuktiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
@@ -47,5 +50,35 @@ class OrderController extends Controller
         }
 
         return redirect()->route('pesanan.bayar', $pesanan->kode_pesanan);
+    }
+
+    /**
+     * UploadBukti(): pelanggan mengunggah bukti pembayaran (hanya pesanan non-tunai).
+     * - Form biasa: redirect kembali ke halaman bayar dengan pesan sukses.
+     * - Fetch/JSON: 200 + status; gagal -> 422 { message, errors: { bukti_bayar: [...] } }.
+     * Pesanan yang tidak ditemukan -> 404.
+     */
+    public function uploadBukti(
+        UploadBuktiRequest $request,
+        string $kode,
+        UploadBuktiService $service
+    ): JsonResponse|RedirectResponse {
+        $pesanan = Pesanan::where('kode_pesanan', strtoupper($kode))->firstOrFail();
+
+        $pesanan = $service->unggah($pesanan, $request->file('bukti_bayar'));
+
+        $pesan = 'Bukti pembayaran diterima. Pesanan Anda menunggu verifikasi admin.';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'kode_pesanan' => $pesanan->kode_pesanan,
+                'status_bayar' => $pesanan->status_bayar,
+                'pesan' => $pesan,
+            ]);
+        }
+
+        return redirect()
+            ->route('pesanan.bayar', $pesanan->kode_pesanan)
+            ->with('status', $pesan);
     }
 }

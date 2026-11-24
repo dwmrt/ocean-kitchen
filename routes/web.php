@@ -24,5 +24,8 @@ Route::post('/pesan', [OrderController::class, 'createOrder'])
 Route::get('/pesanan/{kode}/bayar', [PesananController::class, 'bayar'])
     ->middleware('throttle:60,1')
     ->name('pesanan.bayar');
+Route::post('/pesanan/{kode}/bukti', [OrderController::class, 'uploadBukti'])
+    ->middleware('throttle:10,1')
+    ->name('pesanan.bukti');
 
 require __DIR__.'/admin.php';
