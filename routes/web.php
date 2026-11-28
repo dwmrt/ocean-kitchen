@@ -27,5 +27,12 @@ Route::get('/pesanan/{kode}/bayar', [PesananController::class, 'bayar'])
 Route::post('/pesanan/{kode}/bukti', [OrderController::class, 'uploadBukti'])
     ->middleware('throttle:10,1')
     ->name('pesanan.bukti');
+Route::get('/cek-status', [PesananController::class, 'cekStatus'])->name('pesanan.cek');
+Route::post('/cek-status', [PesananController::class, 'cari'])
+    ->middleware('throttle:10,1')
+    ->name('pesanan.cari');
+Route::get('/pesanan/{kode}', [PesananController::class, 'status'])
+    ->middleware('throttle:30,1')
+    ->name('pesanan.status');
 
 require __DIR__.'/admin.php';
